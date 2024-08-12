@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../actions/set-user";
 import { ROLE } from "../../constants";
 import { selectUserRole } from "../../selects";
-import { useResetForm } from "../hooks/use-reset-form";
+import { useResetForm } from "../../components/hooks/use-reset-form";
 
 const authScheme = yup.object().shape({
   login: yup
@@ -66,6 +66,9 @@ const RegistrationContainer = ({ className }) => {
       }
 
       dispatch(setUser(res));
+      
+      sessionStorage.setItem('userData',JSON.stringify(res) )
+
     });
   };
 

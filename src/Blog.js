@@ -1,8 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import styled from "styled-components";
 import { Header, Footer } from "./components";
-import { Authorization } from "./pages";
-import { Registration } from "./components/registration/registration";
+import { Authorization, Registration } from "./pages";
+import { Users } from "./pages/users/users";
+import { Post } from "./pages/post/post";
+import { useLayoutEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setUser } from "./actions/set-user";
 
 const AppColum = styled.div`
   display: flex;
@@ -14,29 +18,41 @@ const AppColum = styled.div`
   background-color: #fff;
 `;
 
-const Content = styled.div`
-  padding: 120px 0;
+const Page = styled.div`
+  padding: 120px 0 20px;
 `;
 
-// const H2 = styled.h2`
-//   text-align: center;
-// `;
-
 const Blog = () => {
+  const dispatch = useDispatch();
+  // При загрузке страницы проверяем, есть ли данные в sessionStorage
+
+  useLayoutEffect(() => {
+    const currentuserDataJSON = sessionStorage.getItem("userData");
+    if (!currentuserDataJSON) {
+      return;
+    }
+
+    const currentuserData = JSON.parse(currentuserDataJSON);
+
+    dispatch(
+      setUser({ ...currentuserData, roleId: Number(currentuserData.roleId) }) // Восстановление состояния в Redux store
+    );
+  }, [dispatch]);
+
   return (
     <AppColum>
       <Header />
-      <Content>
+      <Page>
         <Routes>
           <Route path="/" element={<div>Главная</div>} />
           <Route path="/login" element={<Authorization />} />
           <Route path="/register" element={<Registration />} />
-          <Route path="/users" element={<div>Пользователи</div>} />
+          <Route path="/users" element={<Users />} />
           <Route path="/post" element={<div>Новая статья</div>} />
-          <Route path="/postId" element={<div>Статья</div>} />
+          <Route path="/post/:id" element={<Post />} />
           <Route path="*" element={<div>Ошибка</div>} />
         </Routes>
-      </Content>
+      </Page>
       <Footer />
     </AppColum>
   );
