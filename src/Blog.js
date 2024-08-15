@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import styled from "styled-components";
-import { Header, Footer } from "./components";
+import { Header, Footer, Modal } from "./components";
 import { Authorization, Registration } from "./pages";
 import { Users } from "./pages/users/users";
 import { Post } from "./pages/post/post";
@@ -50,10 +50,12 @@ const Blog = () => {
           <Route path="/users" element={<Users />} />
           <Route path="/post" element={<div>Новая статья</div>} />
           <Route path="/post/:id" element={<Post />} />
+          <Route path="/post/:id/edit" element={<Post />} />
           <Route path="*" element={<div>Ошибка</div>} />
         </Routes>
       </Page>
       <Footer />
+      <Modal />
     </AppColum>
   );
 };

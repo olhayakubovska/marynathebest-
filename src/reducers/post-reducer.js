@@ -6,9 +6,9 @@ const initialStatePost = {
   imageUrl: "",
   content: "",
   publishedAt: "",
-  comments: [
-    
-  ],
+  loading: true,
+
+  comments: [],
 };
 
 export const postReducer = (state = initialStatePost, action) => {
@@ -17,6 +17,7 @@ export const postReducer = (state = initialStatePost, action) => {
       return {
         ...state,
         ...action.payload,
+        loading: false,
       };
     default:
       return state;

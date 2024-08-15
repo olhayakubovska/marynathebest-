@@ -7,7 +7,7 @@ import { selectUserId } from "../../../../selects";
 import { useServerRequest } from "../../../../components/hooks/use-server";
 import { addCommentAsync } from "../../../../actions/add-comment-async";
 
-const CommentsContainer = ({ className,  comments, postId }) => {
+const CommentsContainer = ({ className, comments, postId }) => {
   const [newComment, setNewComment] = useState("");
   const userId = useSelector(selectUserId);
   const dispatch = useDispatch();
@@ -15,6 +15,7 @@ const CommentsContainer = ({ className,  comments, postId }) => {
 
   const onNewCommentAdd = (postId, userId, content) => {
     dispatch(addCommentAsync(requestServer, postId, userId, content));
+    setNewComment("");
   };
 
   return (
@@ -28,8 +29,8 @@ const CommentsContainer = ({ className,  comments, postId }) => {
         ></textarea>
         <Icon
           id="fa-paper-plane-o"
-          margin="0 0 0 10px"
-          size="24px"
+          // margin="0 0 0 10px"
+          size="21px"
           onClick={() => onNewCommentAdd(postId, userId, newComment)}
         />
       </div>
@@ -41,6 +42,7 @@ const CommentsContainer = ({ className,  comments, postId }) => {
             author={author}
             content={content}
             publishedAt={publishedAt}
+            postId={postId}
           />
         ))}
       </div>
@@ -62,10 +64,13 @@ export const Comments = styled(CommentsContainer)`
     margin: 20px 0 0;
     resize: none;
           font-size: 18px;
+          margin: 20px 9px 0;
 а
   }
 
   & .new-comment {
     display: flex;
+        align-items: baseline;
+
   }
 `;

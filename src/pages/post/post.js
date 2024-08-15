@@ -1,29 +1,41 @@
 import { useEffect } from "react";
+import { useMatch, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import styled from "styled-components";
 import { useServerRequest } from "../../components/hooks/use-server";
+import { Comments, PostContent, PostForm } from "./components";
 import { loadPostaAsync } from "../../actions/load-post-async";
-import { selectPost } from "../../selects";
-import { PostContent } from "./components/post-content.js/post-content";
-import { Comments } from "./components/comments/comments";
+import { selectPost, selectPostLoading } from "../../selects";
+import styled from "styled-components";
 
 const PostContainer = ({ className }) => {
   const dispatch = useDispatch();
   const params = useParams();
+  const isEditing = useMatch("/post/:id/edit");
   const requestServer = useServerRequest();
   const post = useSelector(selectPost);
-
-  // console.log(post);
+  const isLoading = useSelector(selectPostLoading);
 
   useEffect(() => {
     dispatch(loadPostaAsync(requestServer, params.id));
   }, [dispatch, requestServer, params.id]);
 
+  if (isLoading) {
+    return <div>Loading...</div>; // Индикатор загрузки, пока данные не загружены
+  }
+
   return (
     <div className={className}>
-      <PostContent post={post} />
-      <Comments comments={post.comments} postId={post.id} />
+      {isEditing ? (
+        <>
+          {" "}
+          <PostForm post={post} />
+        </>
+      ) : (
+        <>
+          <PostContent post={post} />
+          <Comments comments={post.comments} postId={post.id} />
+        </>
+      )}
     </div>
   );
 };
