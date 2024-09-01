@@ -35,7 +35,7 @@ const SpecialPanelContainer = ({ className, id, publishedAt, editButton }) => {
             <Icon
               inActive={true}
               id="fa-calendar"
-              margin="0 10px 0 0"
+              margin="0 7px 0 0"
               size="18px"
             />
           )}
