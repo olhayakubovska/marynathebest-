@@ -1,33 +1,38 @@
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { useMatch, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useServerRequest } from "../../components/hooks/use-server";
 import { Comments, PostContent, PostForm } from "./components";
 import { loadPostaAsync } from "../../actions/load-post-async";
-import { selectPost, selectPostLoading } from "../../selects";
+import { selectPost } from "../../selects";
 import styled from "styled-components";
+import { RESET_POST_DATA } from "../../actions/reset-post-data";
 
 const PostContainer = ({ className }) => {
   const dispatch = useDispatch();
   const params = useParams();
   const isEditing = useMatch("/post/:id/edit");
+  const isCreating = useMatch("/post");
   const requestServer = useServerRequest();
   const post = useSelector(selectPost);
-  const isLoading = useSelector(selectPostLoading);
+  // const isLoading = useSelector(selectPostLoading);
+
+  useLayoutEffect(() => {
+    dispatch(RESET_POST_DATA);
+  }, [dispatch, isCreating]);
 
   useEffect(() => {
-    dispatch(loadPostaAsync(requestServer, params.id));
-  }, [dispatch, requestServer, params.id]);
+    if (isCreating) {
+      return;
+    }
 
-  if (isLoading) {
-    return <div>Loading...</div>; // Индикатор загрузки, пока данные не загружены
-  }
+    dispatch(loadPostaAsync(requestServer, params.id));
+  }, [dispatch, requestServer, params.id, isCreating]);
 
   return (
     <div className={className}>
-      {isEditing ? (
+      {isEditing || isCreating ? (
         <>
-          {" "}
           <PostForm post={post} />
         </>
       ) : (

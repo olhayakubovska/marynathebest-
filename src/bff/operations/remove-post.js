@@ -1,8 +1,8 @@
-import { updatePost, addPost } from "../api";
+import { deleteComment, deletePost, getComments } from "../api";
 import { ROLE } from "../constants";
 import { sessions } from "../sessions";
 
-export const savePost = async (hash, newPostData) => {
+export const removePost = async (hash, postId) => {
   const accessRoles = [ROLE.ADMIN];
 
   const access = await sessions.access(hash, accessRoles);
@@ -11,11 +11,16 @@ export const savePost = async (hash, newPostData) => {
     return { error: "Доспуп запрещен", res: null };
   }
 
-  const savePost = newPostData.id === '' ? await addPost(newPostData) : await updatePost(newPostData);
+  await deletePost(postId);
 
+  const comments = getComments(postId);
+
+  await Promise.all(
+    comments.map(({ id: commentId }) => deleteComment(commentId))
+  );
 
   return {
     error: null,
-    res: savePost,
+    res: true,
   };
 };

@@ -8,17 +8,21 @@ const PostContentCcontainer = ({
   className,
   post: { id, title, imageUrl, content, publishedAt },
 }) => {
-
-const navigate = useNavigate()   
+  const navigate = useNavigate();
   return (
     <div className={className}>
       <img src={imageUrl} alt={title} />
       <H2>{title}</H2>
       <SpecialPanel
+        id={id}
         publishedAt={publishedAt}
         margin="-20px 0 20px"
         editButton={
-          <Icon id="fa-pencil-square-o" size="18px" onClick={()=>navigate(`/post/${id}/edit`)} />
+          <Icon
+            id="fa-pencil-square-o"
+            size="18px"
+            onClick={() => navigate(`/post/${id}/edit`)}
+          />
         }
       />
 
@@ -28,9 +32,7 @@ const navigate = useNavigate()
 };
 
 export const PostContent = styled(PostContentCcontainer)`
-
-
- & img {
+  & img {
     float: left; /* Обтекание изображения слева */
     margin: 0 20px 10px 0; /* Отступы: сверху 0, справа 20px, снизу 10px, слева 0 */
   }

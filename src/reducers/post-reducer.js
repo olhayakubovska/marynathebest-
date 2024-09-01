@@ -19,6 +19,10 @@ export const postReducer = (state = initialStatePost, action) => {
         ...action.payload,
         loading: false,
       };
+
+    case ACTION_TYPE.RESET_POST_DATA:
+      return initialStatePost;
+
     default:
       return state;
   }

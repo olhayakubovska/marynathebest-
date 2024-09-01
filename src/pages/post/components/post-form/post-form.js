@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Icon, Input } from "../../../../components";
 import { SpecialPanel } from "../special-pane/special-panel";
@@ -13,40 +13,47 @@ const PostFormContainer = ({
   post: { id, title, imageUrl, content, publishedAt },
 }) => {
   const requestServer = useServerRequest();
-  const imageRef = useRef(null);
-  const titleRef = useRef(null);
+
+  const [imageUrlValue, setImageUrlValue] = useState(imageUrl);
+  const [titleValue, setTitleValue] = useState(imageUrl);
   const contentRef = useRef(null);
+
+  useLayoutEffect(() => {
+    setImageUrlValue(imageUrl);
+    setTitleValue(title);
+  }, [imageUrl, title]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const onSave = () => {
-    const newImageUrl = imageRef.current.value;
-
-    const newTitle = titleRef.current.value;
-
     const newContent = sanitizeContent(contentRef.current.innerHTML);
 
     dispatch(
       savePostAsync(requestServer, {
         id,
-        imageUrl: newImageUrl,
-        title: newTitle,
+        imageUrl: imageUrlValue,
+        title: titleValue,
         content: newContent,
       })
-    ).then(() => navigate(`/post/${id}`));
+    ).then(({id}) => navigate(`/post/${id}`));
   };
 
   return (
     <div className={className}>
       <Input
-        ref={imageRef}
-        defaultValue={imageUrl}
+        value={imageUrlValue}
         placeholder="Изображение..."
+        onChange={({ target }) => setImageUrlValue(target.value)}
       />
-      <Input ref={titleRef} defaultValue={title} placeholder="Заголовок..." />
+      <Input
+        value={titleValue}
+        placeholder="Заголовок..."
+        onChange={({ target }) => setTitleValue(target.value)}
+      />
 
       <SpecialPanel
+        id={id}
         publishedAt={publishedAt}
         margin="20px 0"
         editButton={<Icon id="fa-floppy-o" size="18px" onClick={onSave} />}
@@ -71,7 +78,10 @@ export const PostForm = styled(PostFormContainer)`
   }
 
   & .post-text {
+    min-height: 80px;
+    border: 1px solid #000;
     font-size: 18px; /* Размер шрифта */
     white-space: pre-line; /* Сохранение пробелов и переносов строк, как в исходном тексте */
   }
 `;
+//        onChange={({ target }) => setImageUrlValue(target.value)}

@@ -32,18 +32,16 @@ const CommentContainer = ({
     );
   };
 
-
-  
   return (
     <div className={className}>
       <div className="comment">
         <div className="information-panel">
           <div className="author">
-            <Icon id="fa-user-circle-o" size="24px" />
+            <Icon inActive={true} id="fa-user-circle-o" size="24px" />
             {author}
           </div>
           <div className="published-at">
-            <Icon id="fa-calendar" size="24px" />
+            <Icon inActive={true} id="fa-calendar" size="24px" />
             {publishedAt}
           </div>
         </div>
