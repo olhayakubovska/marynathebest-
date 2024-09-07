@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import { forwardRef } from "react";
 
-const InputContainer = forwardRef(({ className, ...props }, ref) => {
+const InputContainer = forwardRef(({ className,  ...props }, ref) => {
   return (
-    <input className={className}  {...props} ref={ref} />
+    <input className={className} {...props} ref={ref} />
   );
 });
 
