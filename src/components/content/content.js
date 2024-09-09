@@ -1,21 +1,15 @@
-import styled from "styled-components";
-import { H2 } from "../h2/h2";
+import { useSelector } from "react-redux";
+import { Error } from "../error/error";
+import { selectUserRole } from "../../selects";
+import { ERROR } from "../../constants";
+import { checkAccess } from "../../utils/check-access";
 
-const Div = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
+export const Content = ({ children, serverError = null, access }) => {
+  const userRole = useSelector(selectUserRole);
+  console.log(userRole);
 
-const Content = ({ children, error }) => {
-  return error ? (
-    <Div>
-      <H2>Ошибка</H2>
-      <div>{error}</div>
-    </Div>
-  ) : (
-    children
-  );
+  const acessError = checkAccess(access, userRole) ? null : ERROR.ACCESS_DENIDE;
+  const error = acessError || serverError;
+
+  return error ? <Error error={error} /> : children;
 };
-
-export default Content;
