@@ -1,16 +1,22 @@
 import styled from "styled-components";
 import { Icon } from "../../../../components";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { onOpenModal } from "../../../../actions/on-open-modal";
 import { CLOSE_MODAL } from "../../../../actions/action-close-modal";
 import { useServerRequest } from "../../../../components/hooks/use-server";
 import { removePostAsync } from "../../../../actions/remove-post-async";
 import { useNavigate } from "react-router-dom";
+import { checkAccess } from "../../../../utils/check-access";
+import { ROLE } from "../../../../constants";
+import { selectUserRole } from "../../../../selects";
 
 const SpecialPanelContainer = ({ className, id, publishedAt, editButton }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const requestServer = useServerRequest();
+
+  const roleId = useSelector(selectUserRole);
+
   const onPostRemove = (id) => {
     dispatch(
       onOpenModal({
@@ -27,6 +33,8 @@ const SpecialPanelContainer = ({ className, id, publishedAt, editButton }) => {
     );
   };
 
+  const isAdmin = checkAccess([ROLE.ADMIN], roleId);
+
   return (
     <div className={className}>
       <div className="special-panel">
@@ -42,17 +50,19 @@ const SpecialPanelContainer = ({ className, id, publishedAt, editButton }) => {
           {publishedAt}
         </div>
 
-        <div className="buttons">
-          {publishedAt && (
-            <Icon
-              id="fa-trash-o"
-              margin="0 0 0 7px"
-              size="18px"
-              onClick={() => onPostRemove(id)}
-            />
-          )}
-          {editButton}
-        </div>
+        {isAdmin && (
+          <div className="buttons">
+            {editButton}
+            {publishedAt && (
+              <Icon
+                id="fa-trash-o"
+                margin="0 0 0 7px"
+                size="18px"
+                onClick={() => onPostRemove(id)}
+              />
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -68,7 +78,7 @@ export const SpecialPanel = styled(SpecialPanelContainer)`
 
   & .buttons {
     display: flex;
-    // font-size: ${({ size }) => size};
+    gap: 5px;
   }
 
   & .special-panel {

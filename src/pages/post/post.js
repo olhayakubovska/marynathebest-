@@ -19,7 +19,6 @@ const PostContainer = ({ className }) => {
   const isCreating = !!useMatch("/post");
   const requestServer = useServerRequest();
   const post = useSelector(selectPost);
-  // const isLoading = useSelector(selectPostLoading);
 
   useLayoutEffect(() => {
     dispatch(RESET_POST_DATA);
@@ -41,6 +40,7 @@ const PostContainer = ({ className }) => {
     return null;
   }
 
+
   const SpecificPostPage =
     isEditing || isCreating ? (
       <Content access={[ROLE.ADMIN]} serverError={error}>
@@ -51,6 +51,7 @@ const PostContainer = ({ className }) => {
     ) : (
       <div className={className}>
         <PostContent post={post} />
+
         <Comments comments={post.comments} postId={post.id} />
       </div>
     );

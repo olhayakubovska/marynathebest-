@@ -3,13 +3,16 @@ import styled from "styled-components";
 import { Comment } from "./commponents";
 import { Icon } from "../../../../components";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUserId } from "../../../../selects";
+import { selectUserId, selectUserRole } from "../../../../selects";
 import { useServerRequest } from "../../../../components/hooks/use-server";
 import { addCommentAsync } from "../../../../actions/add-comment-async";
+import { ROLE } from "../../../../constants";
 
 const CommentsContainer = ({ className, comments, postId }) => {
   const [newComment, setNewComment] = useState("");
   const userId = useSelector(selectUserId);
+  const roleId = useSelector(selectUserRole);
+
   const dispatch = useDispatch();
   const requestServer = useServerRequest();
 
@@ -18,22 +21,28 @@ const CommentsContainer = ({ className, comments, postId }) => {
     setNewComment("");
   };
 
+  const isGuest = roleId === ROLE.GUEST;
+
   return (
     <div className={className}>
-      <div className="new-comment">
-        <textarea
-          name="comment"
-          value={newComment}
-          placeholder="Коментарий..."
-          onChange={({ target }) => setNewComment(target.value)}
-        ></textarea>
-        <Icon
-          id="fa-paper-plane-o"
-          // margin="0 0 0 10px"
-          size="21px"
-          onClick={() => onNewCommentAdd(postId, userId, newComment)}
-        />
-      </div>
+      {!isGuest && (
+        <>
+          <div className="new-comment">
+            <textarea
+              name="comment"
+              value={newComment}
+              placeholder="Коментарий..."
+              onChange={({ target }) => setNewComment(target.value)}
+            ></textarea>
+            <Icon
+              id="fa-paper-plane-o"
+              // margin="0 0 0 10px"
+              size="21px"
+              onClick={() => onNewCommentAdd(postId, userId, newComment)}
+            />
+          </div>
+        </>
+      )}
       <div className="comments">
         {comments.map(({ publishedAt, content, author, id }) => (
           <Comment

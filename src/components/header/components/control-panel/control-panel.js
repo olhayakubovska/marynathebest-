@@ -10,6 +10,7 @@ import {
 } from "../../../../selects";
 import { ROLE } from "../../../../constants";
 import { logout } from "../../../../actions/logout";
+import { checkAccess } from "../../../../utils/check-access";
 
 const RightAlied = styled.div`
   display: flex;
@@ -41,11 +42,12 @@ const ControlPanelContainer = ({ className }) => {
   const login = useSelector(selectUserLogin);
   const session = useSelector(selectUserSession);
 
-const onLogout = ()=>{
-  dispatch(logout(session));
-  sessionStorage.removeItem('userData' )
+  const onLogout = () => {
+    dispatch(logout(session));
+    sessionStorage.removeItem("userData");
+  };
 
-}
+  const isAdmin = checkAccess([ROLE.ADMIN], roleId);
 
   return (
     <div className={className}>
@@ -64,7 +66,7 @@ const onLogout = ()=>{
                 id="fa-sign-out"
                 margin="0px 0 0 10px"
                 size="24px"
-                onClick={()=>onLogout()}
+                onClick={() => onLogout()}
               />
             </StyledLogoutIcon>
           </>
@@ -75,12 +77,16 @@ const onLogout = ()=>{
           <Icon id="fa-caret-left" margin="10px 0 0 0" size="24px" />
         </StyledBackIcon>
 
-        <Link to="/post">
-          <Icon id="fa-file-text-o" margin="10px 0 0 16px" size="24px" />
-        </Link>
-        <Link to="/users">
-          <Icon id="fa-users" margin="10px 0 0 16px" size="24px" />
-        </Link>
+        {isAdmin && (
+          <>
+            <Link to="/post">
+              <Icon id="fa-file-text-o" margin="10px 0 0 16px" size="24px" />
+            </Link>
+            <Link to="/users">
+              <Icon id="fa-users" margin="10px 0 0 16px" size="24px" />
+            </Link>
+          </>
+        )}
       </RightAlied>
     </div>
   );

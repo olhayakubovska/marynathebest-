@@ -1,4 +1,5 @@
-import { getPost, getComments, getUsers } from "../api";
+import { getPostCommentWithAuthor as getPostCommentsWithAuthor } from "../../utils/get-comments-with-author";
+import { getPost } from "../api";
 
 export const fetchPost = async (postId) => {
   let post;
@@ -16,19 +17,8 @@ export const fetchPost = async (postId) => {
       res: null,
     };
   }
-  
-  const comments = await getComments(postId);
 
-  const users = await getUsers();
-
-  const commentWidthAutor = comments.map((comment) => {
-    const user = users.find(({ id }) => id === comment.authorId);
-
-    return {
-      ...comment,
-      author: user?.login,
-    };
-  });
+  const commentWidthAutor = await getPostCommentsWithAuthor(postId);
 
   return {
     error: null,
