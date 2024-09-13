@@ -3,6 +3,8 @@ import { Icon } from "../../../../components";
 import styled from "styled-components";
 import { TableRow } from "../table-row/table-row";
 import { useServerRequest } from "../../../../components/hooks/use-server";
+import PropTypes from "prop-types";
+import { PROP_TYPES } from "../../../../constants";
 
 const UserRowContainer = ({
   className,
@@ -29,7 +31,6 @@ const UserRowContainer = ({
   };
 
   const isSaveButtonDisabled = selectRoleId === initialRoleUser;
-  console.log(isSaveButtonDisabled);
   return (
     <div className={className}>
       <TableRow border={true}>
@@ -38,7 +39,6 @@ const UserRowContainer = ({
 
         <div className="role-column">
           <select value={selectRoleId} onChange={onRoleChange}>
-            console.log(roles)
             {roles.map(({ id: roleId, name: roleName }) => (
               <option key={roleId} value={roleId}>
                 {roleName}
@@ -75,3 +75,13 @@ export const UserRow = styled(UserRowContainer)`
     padding: 0 5px;
   }
 `;
+
+UserRow.propTypes = {
+  id: PropTypes.string.isRequired,
+  login: PropTypes.string.isRequired,
+  registeredAt: PropTypes.string.isRequired,
+  roleId: PROP_TYPES.ROLE_ID.isRequired,
+  roles: PropTypes.arrayOf(PROP_TYPES.ROLE).isRequired,
+
+  removeUser: PropTypes.func.isRequired,
+};

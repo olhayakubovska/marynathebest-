@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import PropTypes from 'prop-types'
 
 const ButtonContainer = ({ children, className, onClick, ...props }) => {
   return (
@@ -22,3 +23,9 @@ export const Button = styled(ButtonContainer)`
     cursor: pointer;
   }
 `;
+
+Button.propTypes = {
+  children: PropTypes.node.isRequired,
+  // onClick: PropTypes.func.isRequired, // Исправлено
+  width: PropTypes.string, // Если вы хотите указать prop width, лучше добавить и его
+};

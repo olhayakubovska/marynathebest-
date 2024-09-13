@@ -8,6 +8,7 @@ import { onOpenModal } from "../../../../../../actions/on-open-modal";
 import { CLOSE_MODAL } from "../../../../../../actions/action-close-modal";
 import { ROLE } from "../../../../../../constants";
 import { selectUserRole } from "../../../../../../selects";
+import PropTypes from "prop-types";
 
 const CommentContainer = ({
   className,
@@ -97,3 +98,11 @@ width: 560px;
 
 }
 `;
+
+Comment.propTypes = {
+  id: PropTypes.number.isRequired,
+  author: PropTypes.string.isRequired,
+  content: PropTypes.string.isRequired,
+  publishedAt: PropTypes.string.isRequired,
+  postId: PropTypes.string.isRequired,
+};

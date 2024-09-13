@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { H2, Icon } from "../../../../components";
 import { SpecialPanel } from "../special-pane/special-panel";
 import { useNavigate } from "react-router-dom";
+import { PROP_TYPES } from "../../../../constants";
 
 const PostContentCcontainer = ({
   className,
@@ -42,3 +43,7 @@ export const PostContent = styled(PostContentCcontainer)`
     white-space: pre-line; /* Сохранение пробелов и переносов строк, как в исходном тексте */
   }
 `;
+
+PostContent.propTypes = {
+  post: PROP_TYPES.POST.isRequired,
+};

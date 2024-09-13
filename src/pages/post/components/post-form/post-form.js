@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { savePostAsync } from "../../../../actions/save-post-async";
 import { useNavigate } from "react-router-dom";
 import { useServerRequest } from "../../../../components/hooks/use-server";
+import { PROP_TYPES } from "../../../../constants";
 
 const PostFormContainer = ({
   className,
@@ -84,4 +85,7 @@ export const PostForm = styled(PostFormContainer)`
     white-space: pre-line; /* Сохранение пробелов и переносов строк, как в исходном тексте */
   }
 `;
-//        onChange={({ target }) => setImageUrlValue(target.value)}
+
+PostForm.propTypes = {
+  post: PROP_TYPES.POST.isRequired,
+};
