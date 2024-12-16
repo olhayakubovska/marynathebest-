@@ -47,7 +47,7 @@ app.get("/", async (req, res) => {
   // const questions = await getQuestions();
   // console.log(questions, "questions");
   res.render("index", {
-    title: "hello world",
+    title: "Quiz",
     // questions: questions,
   });
 });

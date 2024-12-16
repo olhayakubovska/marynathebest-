@@ -4,17 +4,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css">
   <title>Quiz</title>
 </head>
 
 <body>
   <div class="main">
-    <div>
+    <div class="title">
       <%= title %>
     </div>
     <div class="container"></div>
-    <button data-start="starttest" >start</button>
-    <button class="btn">next</button>
+    <div class="buttons">
+     <button data-start="starttest" class="start">Запустить тест</button>
+      <button data-edit="edit" class="edit">Редактировать тест</button>
+    </div>
+
+    <!-- <button class="btn">next</button> -->
 </body>
 </div>
 <script type="module" src="script.js"></script>
