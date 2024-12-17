@@ -33,7 +33,12 @@
 
 import express from "express";
 import mongoose from "mongoose";
-import { addQuestion, getAnswers, getQuestions } from "./controller.js"; // Импортируем функцию через ES Modules
+import {
+  addQuestion,
+  getAnswers,
+  getQuestions,
+  updateValue,
+} from "./controller.js"; // Импортируем функцию через ES Modules
 
 const app = express();
 const port = 3000;
@@ -59,6 +64,27 @@ app.post("/answers", async (req, res) => {
   // console.log(req.body, "reqBody");
   // console.log("fetchPost")
   await addQuestion(req.body);
+});
+
+// app.post("/api/questions/:id", async (req, res) => {
+//   console.log("its work!")
+//   const questionId = req.params.id;
+//   const newAnswers = req.body.answers;
+//   console.log(questionId,newAnswers,"SERVER")
+// });
+// app.get("/api/questions/:id", async (req, res) => {
+//   console.log("its work!")
+//   const { id } = req.params; // Получаем id из URL
+// console.log(id,"ID server")
+// });
+
+app.post("/api/questions/:id", async (req, res) => {
+  // console.log("its work!");
+  const { id } = req.params; // Получаем id из URL
+  // console.log(id, "ID server");
+  const body = req.body; // Получаем данные из тела запроса
+  console.log(body, "Body server");
+  await updateValue(id, body);
 });
 
 mongoose

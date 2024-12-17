@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 // import { Schema } from "mongoose";
 
 const answersSchema = mongoose.Schema({
+  id: {
+    type: String,
+  },
   text: {
     type: String,
     required: true,

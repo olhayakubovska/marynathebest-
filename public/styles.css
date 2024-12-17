@@ -86,3 +86,68 @@
   outline: none;
   transition: all 0.3s ease;
 }
+
+.custom-dropdown {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.custom-dropdown input {
+  display: block;
+  /* width: 100%; */
+  margin-bottom: 5px;
+  padding: 5px;
+}
+
+.div-list {
+  display: none;
+}
+
+.toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  /* border: 1px solid #ccc;
+  border-radius: 4px; */
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  font-size: 14px;
+  position: relative;
+  transition: box-shadow 0.2s;
+}
+
+.add-new-question {
+  width: 150px;
+  height: 30px;
+  margin: 10px 0;
+}
+
+.add-new-question:hover {
+  background-color: #69a6da;
+}
+
+.input-wrapper {
+  display: flex;
+}
+
+.remove-btn {
+  width: 9px;
+  height: 16px;
+  margin: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.save-new-value-button {
+  width: 170px;
+  height: 45px;
+  background-color: #a9d961;
+  border-radius: 20px;
+  border: 1px solid black;
+  cursor: pointer;
+}

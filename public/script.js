@@ -43,6 +43,47 @@ async function getAnswersFetch() {
   }
 }
 
+// async function updateValue(idQuestion, newValue) {
+//   fetch(`/api/questions/${idQuestion}`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({
+//       answers: [{ id: Math.random(), text: newValue, isCorrect: false }],
+//     }),
+//   });
+// }
+// async function updateValue(idQuestion) {
+//   fetch(`/api/questions/${idQuestion}`).then((question)=>question.json()).then((data)=>console.log(data,"dataFetch"))
+// }
+
+// const updateValue = (idQuestion) => fetch(`/api/questions/${idQuestion}`);
+//     .then((response) => response.json())  // Обрабатываем JSON-ответ
+//     .then((data) => console.log(data, "dataFetch")) // Логируем данные
+//     .catch((error) => console.error('Error fetching data:', error)); // Ловим ошибки
+// }
+
+const updateValue = (idQuestion, newValue,chechBoxValue) => {
+  fetch(`/api/questions/${idQuestion}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      // id: Math.random(),
+      text: newValue,
+      isCorrect: chechBoxValue,
+    }),
+  });
+  // }).then((question) => {
+  //   question.json();
+  // });
+};
+
+// Вызовите функцию с ID вопроса
+// updateValue('6758b086f87b04e861fcd6cb');
+
 document.addEventListener("click", (event) => {
   if (event.target.dataset.start === "starttest") {
     const mainPage = document.querySelector(".main");
@@ -141,37 +182,103 @@ document.addEventListener("click", async (event) => {
     const container = document.querySelector(".container");
     container.innerHTML = "";
 
-    // const testForm = document.createElement("input");
+    const saveNewValueButton = document.createElement("button");
+    saveNewValueButton.classList.add("save-new-value-button");
+    saveNewValueButton.innerHTML = "save";
 
     const questions = await getQuestionsFetch();
+
     questions.map((item) => {
-      const select = document.createElement("select");
-      select.setAttribute("key", item.id);
-      const option = document.createElement("option");
-      option.value = item.question;
-      option.textContent = item.question;
+      // console.log(item._id, "ID");
+      // const select = document.createElement("select");
+      const wrapperDiv = document.createElement("div");
+      // select.setAttribute("key", item.id);
+      wrapperDiv.classList.add("custom-dropdown");
 
-      select.appendChild(option);
-      container.appendChild(select);
+      const toggelBtn = document.createElement("button");
+      toggelBtn.innerHTML = item.question;
+      toggelBtn.classList.add("toggle-btn");
 
-      // item.answers.map((item) => {
-      //   const edidedAnswer = document.createElement("input");
-      //   console.log(item.text);
-      //   edidedAnswer.innerHTML = item.text;
-      //   option.appendChild(edidedAnswer);
-      // });
-    //   const answersContainer = document.createElement("div");
+      const divList = document.createElement("div");
+      divList.classList.add("div-list");
 
-    //   item.answers.map((answer) => {
-    //     const editedAnswer = document.createElement("div");
-    //     editedAnswer.innerHTML = answer.text; // Set the value of the input to item.text
-    //     answersContainer.appendChild(editedAnswer);
-    //   });
-    // });
+      const addNewQuestionBtn = document.createElement("button");
+      addNewQuestionBtn.classList.add("add-new-question");
+      addNewQuestionBtn.innerHTML = "+";
 
-    // testForm.value = "lalalaf";
-    console.log(questions);
+      divList.appendChild(addNewQuestionBtn);
 
-    // container.appendChild(testForm);
+      addNewQuestionBtn.addEventListener("click", (event) => {
+        const inpuWrapper = document.createElement("div");
+        inpuWrapper.classList.add("input-wrapper");
+
+        const removeBtn = document.createElement("button");
+        removeBtn.classList.add("remove-btn");
+        removeBtn.innerHTML = "X";
+
+        const newQuestionInput = document.createElement("input");
+        const checkBox = document.createElement("input");
+        checkBox.type = "checkbox";
+        let chechBoxValue = false;
+        checkBox.addEventListener("change", (event) => {
+          // console.log("Checkbox value:", event.target.checked); // true или false
+          chechBoxValue = event.target.checked;
+        });
+        // console.log(chechBoxValue,"checkBoxValue")
+        newQuestionInput.type = "text";
+        newQuestionInput.placeholder = "Add new answer...";
+
+        saveNewValueButton.addEventListener("click", (event) => {
+          const inputValue = newQuestionInput.value;
+          // console.log(item._id, inputValue,"script");
+          // await updateValue(item._id);
+          updateValue(item._id, inputValue,chechBoxValue);
+        });
+
+        addNewQuestionBtn.disabled = true;
+
+        removeBtn.addEventListener("click", (event) => {
+          inpuWrapper.remove();
+          addNewQuestionBtn.disabled = false;
+        });
+
+        inpuWrapper.appendChild(checkBox);
+        inpuWrapper.appendChild(removeBtn);
+        inpuWrapper.appendChild(newQuestionInput);
+        divList.appendChild(inpuWrapper);
+      });
+
+      item.answers.map((item) => {
+        const inpuWrapper = document.createElement("div");
+        inpuWrapper.classList.add("input-wrapper");
+
+        const removeBtn = document.createElement("button");
+        removeBtn.classList.add("remove-btn");
+        removeBtn.innerHTML = "X";
+
+        const inputEdit = document.createElement("input");
+        const checkBox = document.createElement("input");
+        checkBox.type = "checkbox";
+
+        inputEdit.type = "text";
+        inputEdit.value = item.text;
+
+        inpuWrapper.appendChild(checkBox);
+        inpuWrapper.appendChild(removeBtn);
+        inpuWrapper.appendChild(inputEdit);
+        divList.appendChild(inpuWrapper);
+      });
+
+      toggelBtn.addEventListener("click", (event) => {
+        divList.style.display === "none"
+          ? (divList.style.display = "block")
+          : (divList.style.display = "none");
+      });
+
+      wrapperDiv.appendChild(toggelBtn);
+      wrapperDiv.appendChild(divList);
+      container.appendChild(wrapperDiv);
+      container.appendChild(saveNewValueButton);
+    });
   }
 });
