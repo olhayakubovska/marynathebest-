@@ -1,6 +1,6 @@
 import Answer from "./model/Answers.js";
 import Question from "./model/Question.js";
-import mongoose from "mongoose";
+// import mongoose from "mongoose";
 
 async function getQuestions(req, res) {
   const questions = await Question.find();
@@ -20,24 +20,24 @@ async function getAnswers(req, res) {
 }
 
 async function updateValue(idQuestion, newAnswer) {
-  console.log(idQuestion, newAnswer, "controller Value");
-
-  //   const questions = await Question.find();
-  //  const updateQuestion = questions.map((question) => {
-  //     question.id === idQuestion ? { ...question, body } : question;
-  // //   });
-  // const updatedQuestion = await Question.findOneAndUpdate(
-  //   { id: idQuestion }, // Условие для поиска
-  //   { $push: { answers: newAnswer } }, // Добавляем новый ответ в массив
-  //   { new: true } // Вернуть обновленный документ
-  // );
+  // console.log(idQuestion, newAnswer, "controller Value");
+  // s;
   const updatedQuestion = await Question.findOneAndUpdate(
-    { _id: idQuestion}, 
-    { $push: { answers: newAnswer }},
+    { _id: idQuestion },
+    { $push: { answers: newAnswer } },
     { new: true }
   );
-  console.log(updatedQuestion, "updatedQuestionFroMongoDB");
+  // console.log(updatedQuestion, "updatedQuestionFroMongoDB");
   return updatedQuestion;
 }
 
-export { getQuestions, addQuestion, getAnswers, updateValue };
+async function deleteAnswer(questionId, answerId) {
+  const updateQuestions = await Question.updateOne(
+    { _id: questionId },
+    { $pull: { answers: { _id: answerId } } }
+  );
+
+  return updateQuestions;
+}
+
+export { getQuestions, addQuestion, getAnswers, updateValue, deleteAnswer };

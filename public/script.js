@@ -43,52 +43,73 @@ async function getAnswersFetch() {
   }
 }
 
-// async function updateValue(idQuestion, newValue) {
+// const updateValue = (idQuestion, newValue, chechBoxValue) => {
 //   fetch(`/api/questions/${idQuestion}`, {
 //     method: "POST",
 //     headers: {
 //       "Content-Type": "application/json",
 //     },
 //     body: JSON.stringify({
-//       answers: [{ id: Math.random(), text: newValue, isCorrect: false }],
+//       // id: Math.random(),
+//       text: newValue,
+//       isCorrect: chechBoxValue,
 //     }),
 //   });
-// }
-// async function updateValue(idQuestion) {
-//   fetch(`/api/questions/${idQuestion}`).then((question)=>question.json()).then((data)=>console.log(data,"dataFetch"))
-// }
+//   // }).then((question) => {
+//   //   question.json();
+//   // });
+// };
 
-// const updateValue = (idQuestion) => fetch(`/api/questions/${idQuestion}`);
-//     .then((response) => response.json())  // Обрабатываем JSON-ответ
-//     .then((data) => console.log(data, "dataFetch")) // Логируем данные
-//     .catch((error) => console.error('Error fetching data:', error)); // Ловим ошибки
-// }
+const updateValue = async (idQuestion, newValue, chechBoxValue) => {
+  try {
+    const response = await fetch(`/api/questions/${idQuestion}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        text: newValue,
+        isCorrect: chechBoxValue,
+      }),
+    });
 
-const updateValue = (idQuestion, newValue,chechBoxValue) => {
-  fetch(`/api/questions/${idQuestion}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      // id: Math.random(),
-      text: newValue,
-      isCorrect: chechBoxValue,
-    }),
-  });
-  // }).then((question) => {
-  //   question.json();
-  // });
+    if (!response.ok) {
+      throw new Error("Failed to update the question");
+    }
+
+    const data = await response.json();
+    // Handle the response data if needed
+    console.log(data);
+  } catch (error) {
+    console.error("Error:", error);
+  }
 };
 
-// Вызовите функцию с ID вопроса
-// updateValue('6758b086f87b04e861fcd6cb');
+const removeQuestionFetch = async (questionId, answerId) => {
+  try {
+    const response = await fetch(
+      `/api/questions/${questionId}?answerId=${answerId}`,
+      {
+        method: "DELETE",
+      }
+    );
+    // const question = await response.json();
+    // console.log(question, "question");
+    return response;
+    // const updatedQuestions = await getQuestionsFetch();
+    // console.log(updatedQuestions, "Updated questions");
+
+    // return updatedQuestions;
+  } catch (e) {
+    console.log(e);
+  }
+};
 
 document.addEventListener("click", (event) => {
   if (event.target.dataset.start === "starttest") {
     const mainPage = document.querySelector(".main");
-    const start = document.querySelector(".start");
-    const edit = document.querySelector(".edit");
+    // const start = document.querySelector(".start");
+    // const edit = document.querySelector(".edit");
     const buttons = document.querySelector(".buttons");
     // start.classList.add("btn-start");
 
@@ -185,100 +206,127 @@ document.addEventListener("click", async (event) => {
     const saveNewValueButton = document.createElement("button");
     saveNewValueButton.classList.add("save-new-value-button");
     saveNewValueButton.innerHTML = "save";
-
     const questions = await getQuestionsFetch();
-
-    questions.map((item) => {
-      // console.log(item._id, "ID");
-      // const select = document.createElement("select");
-      const wrapperDiv = document.createElement("div");
-      // select.setAttribute("key", item.id);
-      wrapperDiv.classList.add("custom-dropdown");
-
-      const toggelBtn = document.createElement("button");
-      toggelBtn.innerHTML = item.question;
-      toggelBtn.classList.add("toggle-btn");
-
-      const divList = document.createElement("div");
-      divList.classList.add("div-list");
-
-      const addNewQuestionBtn = document.createElement("button");
-      addNewQuestionBtn.classList.add("add-new-question");
-      addNewQuestionBtn.innerHTML = "+";
-
-      divList.appendChild(addNewQuestionBtn);
-
-      addNewQuestionBtn.addEventListener("click", (event) => {
-        const inpuWrapper = document.createElement("div");
-        inpuWrapper.classList.add("input-wrapper");
-
-        const removeBtn = document.createElement("button");
-        removeBtn.classList.add("remove-btn");
-        removeBtn.innerHTML = "X";
-
-        const newQuestionInput = document.createElement("input");
-        const checkBox = document.createElement("input");
-        checkBox.type = "checkbox";
-        let chechBoxValue = false;
-        checkBox.addEventListener("change", (event) => {
-          // console.log("Checkbox value:", event.target.checked); // true или false
-          chechBoxValue = event.target.checked;
-        });
-        // console.log(chechBoxValue,"checkBoxValue")
-        newQuestionInput.type = "text";
-        newQuestionInput.placeholder = "Add new answer...";
-
-        saveNewValueButton.addEventListener("click", (event) => {
-          const inputValue = newQuestionInput.value;
-          // console.log(item._id, inputValue,"script");
-          // await updateValue(item._id);
-          updateValue(item._id, inputValue,chechBoxValue);
-        });
-
-        addNewQuestionBtn.disabled = true;
-
-        removeBtn.addEventListener("click", (event) => {
-          inpuWrapper.remove();
-          addNewQuestionBtn.disabled = false;
-        });
-
-        inpuWrapper.appendChild(checkBox);
-        inpuWrapper.appendChild(removeBtn);
-        inpuWrapper.appendChild(newQuestionInput);
-        divList.appendChild(inpuWrapper);
-      });
-
-      item.answers.map((item) => {
-        const inpuWrapper = document.createElement("div");
-        inpuWrapper.classList.add("input-wrapper");
-
-        const removeBtn = document.createElement("button");
-        removeBtn.classList.add("remove-btn");
-        removeBtn.innerHTML = "X";
-
-        const inputEdit = document.createElement("input");
-        const checkBox = document.createElement("input");
-        checkBox.type = "checkbox";
-
-        inputEdit.type = "text";
-        inputEdit.value = item.text;
-
-        inpuWrapper.appendChild(checkBox);
-        inpuWrapper.appendChild(removeBtn);
-        inpuWrapper.appendChild(inputEdit);
-        divList.appendChild(inpuWrapper);
-      });
-
-      toggelBtn.addEventListener("click", (event) => {
-        divList.style.display === "none"
-          ? (divList.style.display = "block")
-          : (divList.style.display = "none");
-      });
-
-      wrapperDiv.appendChild(toggelBtn);
-      wrapperDiv.appendChild(divList);
-      container.appendChild(wrapperDiv);
-      container.appendChild(saveNewValueButton);
-    });
+    renderQuestions(questions, container, saveNewValueButton);
   }
 });
+
+const renderQuestions = (questions, container, saveNewValueButton) => {
+  questions.map((question) => {
+    // console.log(item._id, "ID");
+    // const select = document.createElement("select");
+    const wrapperDiv = document.createElement("div");
+    // select.setAttribute("key", item.id);
+    wrapperDiv.classList.add("custom-dropdown");
+
+    const toggelBtn = document.createElement("button");
+    toggelBtn.innerHTML = question.question;
+    toggelBtn.classList.add("toggle-btn");
+
+    const divList = document.createElement("div");
+    divList.classList.add("div-list");
+
+    const addNewQuestionBtn = document.createElement("button");
+    addNewQuestionBtn.classList.add("add-new-question");
+    addNewQuestionBtn.innerHTML = "+";
+
+    divList.appendChild(addNewQuestionBtn);
+
+    addNewQuestionBtn.addEventListener("click", (event) => {
+      const inpuWrapper = document.createElement("div");
+      inpuWrapper.classList.add("input-wrapper");
+
+      const removeBtn = document.createElement("button");
+      removeBtn.classList.add("remove-btn");
+      removeBtn.innerHTML = "X";
+
+      const newQuestionInput = document.createElement("input");
+      const checkBox = document.createElement("input");
+      checkBox.type = "checkbox";
+      let chechBoxValue = false;
+      checkBox.addEventListener("change", (event) => {
+        // console.log("Checkbox value:", event.target.checked); // true или false
+        chechBoxValue = event.target.checked;
+      });
+      // console.log(chechBoxValue,"checkBoxValue")
+      newQuestionInput.type = "text";
+      newQuestionInput.placeholder = "Add new answer...";
+
+      saveNewValueButton.addEventListener("click", (event) => {
+        const inputValue = newQuestionInput.value;
+        // console.log(item._id, inputValue,"script");
+        // await updateValue(item._id);
+        updateValue(question._id, inputValue, chechBoxValue);
+      });
+
+      addNewQuestionBtn.disabled = true;
+
+      removeBtn.addEventListener("click", (event) => {
+        inpuWrapper.remove();
+        addNewQuestionBtn.disabled = false;
+        console.log("remove2");
+      });
+
+      inpuWrapper.appendChild(checkBox);
+      inpuWrapper.appendChild(removeBtn);
+      inpuWrapper.appendChild(newQuestionInput);
+      divList.appendChild(inpuWrapper);
+    });
+
+    question.answers.map((item) => {
+      const inpuWrapper = document.createElement("div");
+      inpuWrapper.classList.add("input-wrapper");
+
+      const removeBtn = document.createElement("button");
+      removeBtn.classList.add("remove-btn");
+      removeBtn.innerHTML = "X";
+
+      // removeBtn.addEventListener("click", (event) => {
+      //   removeQuestionFetch(question._id, item._id).then(() =>
+      //     renderQuestions(questions, container, saveNewValueButton)
+      //   );
+      //   // console.log("remove ItemID", item._id);
+      // });
+      removeBtn.addEventListener("click", (event) => {
+        // try {
+          console.log("remove");
+
+        //   await removeQuestionFetch(question._id, item._id);
+        //   console.log("lalaall")
+        //   const updatedQuestions = await getQuestionsFetch();
+        //   console.log(updatedQuestions, "новые вопросы");
+
+        //   // renderQuestions(updatedQuestions, container, saveNewValueButton);
+        // } catch (error) {
+        //   console.error("Ошибка при удалении вопроса:", error);
+        // }
+        removeQuestionFetch(question._id, item._id).then(() =>
+          console.log("lalalalal2")
+        );
+      });
+
+      const inputEdit = document.createElement("input");
+      const checkBox = document.createElement("input");
+      checkBox.type = "checkbox";
+
+      inputEdit.type = "text";
+      inputEdit.value = item.text;
+
+      inpuWrapper.appendChild(checkBox);
+      inpuWrapper.appendChild(removeBtn);
+      inpuWrapper.appendChild(inputEdit);
+      divList.appendChild(inpuWrapper);
+    });
+
+    toggelBtn.addEventListener("click", (event) => {
+      divList.style.display === "none"
+        ? (divList.style.display = "block")
+        : (divList.style.display = "none");
+    });
+
+    wrapperDiv.appendChild(toggelBtn);
+    wrapperDiv.appendChild(divList);
+    container.appendChild(wrapperDiv);
+    container.appendChild(saveNewValueButton);
+  });
+};

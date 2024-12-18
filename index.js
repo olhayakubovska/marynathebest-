@@ -35,6 +35,7 @@ import express from "express";
 import mongoose from "mongoose";
 import {
   addQuestion,
+  deleteAnswer,
   getAnswers,
   getQuestions,
   updateValue,
@@ -66,6 +67,12 @@ app.post("/answers", async (req, res) => {
   await addQuestion(req.body);
 });
 
+app.delete("/api/questions/:id", async (req, res) => {
+  const questionId = req.params.id;
+  const answerId = req.query.answerId;
+  // console.log(answerId, "answerId");
+  await deleteAnswer(questionId, answerId);
+});
 // app.post("/api/questions/:id", async (req, res) => {
 //   console.log("its work!")
 //   const questionId = req.params.id;
@@ -83,7 +90,7 @@ app.post("/api/questions/:id", async (req, res) => {
   const { id } = req.params; // Получаем id из URL
   // console.log(id, "ID server");
   const body = req.body; // Получаем данные из тела запроса
-  console.log(body, "Body server");
+  // console.log(body, "Body server");
   await updateValue(id, body);
 });
 
