@@ -34,11 +34,11 @@
 import express from "express";
 import mongoose from "mongoose";
 import {
-  addQuestion,
+  addAnswerFromUser,
+  addNewAnswer,
   deleteAnswer,
   getAnswers,
   getQuestions,
-  updateValue,
 } from "./controller.js"; // Импортируем функцию через ES Modules
 
 const app = express();
@@ -57,41 +57,29 @@ app.get("/", async (req, res) => {
     // questions: questions,
   });
 });
-app.get("/api/questions", getQuestions);
+app.get("/questions", getQuestions);
+
+app.delete("/questions/:id", async (req, res) => {
+  const questionId = req.params.id;
+  const answerId = req.query.answerId;
+  const questions = await deleteAnswer(questionId, answerId);
+
+  res.json(questions);
+});
+
+app.post("/questions/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const body = req.body;
+  console.log(id, body, "express");
+  const questions = await addNewAnswer(id, body);
+  res.json(questions);
+});
 
 app.get("/answers", getAnswers);
 
-app.post("/answers", async (req, res) => {
-  // console.log(req.body, "reqBody");
-  // console.log("fetchPost")
-  await addQuestion(req.body);
-});
-
-app.delete("/api/questions/:id", async (req, res) => {
-  const questionId = req.params.id;
-  const answerId = req.query.answerId;
-  // console.log(answerId, "answerId");
-  await deleteAnswer(questionId, answerId);
-});
-// app.post("/api/questions/:id", async (req, res) => {
-//   console.log("its work!")
-//   const questionId = req.params.id;
-//   const newAnswers = req.body.answers;
-//   console.log(questionId,newAnswers,"SERVER")
-// });
-// app.get("/api/questions/:id", async (req, res) => {
-//   console.log("its work!")
-//   const { id } = req.params; // Получаем id из URL
-// console.log(id,"ID server")
-// });
-
-app.post("/api/questions/:id", async (req, res) => {
-  // console.log("its work!");
-  const { id } = req.params; // Получаем id из URL
-  // console.log(id, "ID server");
-  const body = req.body; // Получаем данные из тела запроса
-  // console.log(body, "Body server");
-  await updateValue(id, body);
+app.post("/answersfromuser", async (req, res) => {
+  await addAnswerFromUser(req.body);
 });
 
 mongoose
