@@ -23,7 +23,7 @@ async function addNewAnswer(idQuestion, newAnswer) {
   try {
     await Question.findOneAndUpdate(
       { _id: idQuestion },
-      { $push: { answers: newAnswer } },
+      { $push: { answers: newAnswer } }
       // { new: true }
     );
 
@@ -67,10 +67,41 @@ async function deleteAnswer(questionId, answerId) {
   }
 }
 
+// async function saveUpdatedQuestions(questions) {
+
+//   try {
+//     await Question.updateMany(
+//       {}, // Условие: пустой объект означает "все документы"
+//       { $set: { questions } } // Обновление
+//     );
+//     console.log("Questions updated successfully");
+//   } catch (error) {
+//     console.error("Ошибка при обновлении вопросов:", error);
+//   }
+// }
+
+async function saveUpdatedQuestions(questions) {
+  try {
+    for (const question of questions) {
+      const result = await Question.updateOne(
+        { _id: question._id }, 
+        { $set: { question: question.question, answers: question.answers } }
+      );
+      console.log("Question updated:", result);
+    }
+  } catch (error) {
+    console.error("Ошибка при обновлении вопросов:", error);
+  }
+}
+
+
 export {
   getQuestions,
   addAnswerFromUser,
   getAnswers,
-  addNewAnswer ,
+  addNewAnswer,
   deleteAnswer,
+  saveUpdatedQuestions,
 };
+  // console.log(questions, "mongoDB")
+  // questions.map((item) => console.log(item.answers));

@@ -39,6 +39,7 @@ import {
   deleteAnswer,
   getAnswers,
   getQuestions,
+  saveUpdatedQuestions,
 } from "./controller.js"; // Импортируем функцию через ES Modules
 
 const app = express();
@@ -80,6 +81,12 @@ app.get("/answers", getAnswers);
 
 app.post("/answersfromuser", async (req, res) => {
   await addAnswerFromUser(req.body);
+});
+
+app.put("/questions", async (req, res) => {
+  const questions = req.body;
+  console.log(questions, "questions from fetch");
+  await saveUpdatedQuestions(questions);
 });
 
 mongoose
