@@ -7,6 +7,7 @@ import { PAGINATION_LIMIT } from "../../constants";
 import { getLastPageFromLinks } from "./utils";
 import { Search } from "./search/search";
 import { debounce } from "./utils/debounce";
+import { useSelector } from "react-redux";
 
 const MainContainer = ({ className }) => {
   const [posts, setPosts] = useState([]);
@@ -35,6 +36,8 @@ const MainContainer = ({ className }) => {
     startDelaySearch(!shouldPhrase);
   };
 
+  // const session = useSelector(({ user }) => user.session);
+  // console.log(session, "session");
   return (
     <div className={className}>
       <div className="posts-and-search">
@@ -59,9 +62,9 @@ const MainContainer = ({ className }) => {
           <div>Статьи не найдено</div>
         )}
       </div>
-    {lastPage > 1 && posts.length > 0 && (
-  <Pagination page={page} lastPage={lastPage} setPage={setPage} />
-)}
+      {lastPage > 1 && posts.length > 0 && (
+        <Pagination page={page} lastPage={lastPage} setPage={setPage} />
+      )}
     </div>
   );
 };

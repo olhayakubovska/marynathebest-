@@ -58,7 +58,7 @@ const RegistrationContainer = ({ className }) => {
 
   useResetForm(reset);
 
-  const onSubmit = ({ login, password }) => {
+  const onSubmit =  ({ login, password }) => {
     server.registration(login, password).then(({ error, res }) => {
       if (error) {
         setServerError(`Ошибка запроса:' ${error}`);
@@ -66,9 +66,8 @@ const RegistrationContainer = ({ className }) => {
       }
 
       dispatch(setUser(res));
-      
-      sessionStorage.setItem('userData',JSON.stringify(res) )
 
+      sessionStorage.setItem("userData", JSON.stringify(res));
     });
   };
 
